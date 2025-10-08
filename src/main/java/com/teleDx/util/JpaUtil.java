@@ -6,13 +6,22 @@ import jakarta.persistence.Persistence;
 import org.hibernate.collection.spi.PersistentIdentifierBag;
 
 public class JpaUtil {
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("teledxPU");
+    private static final EntityManagerFactory emf ;
+     static {
+         try{
+             emf = Persistence.createEntityManagerFactory("teledxPU");
+         }catch (Throwable ex){
+             System.err.println("❌ Initial EntityManagerFactory creation failed: " + ex);
+             throw new ExceptionInInitializerError(ex);
+         }
+     }
 
-    public static EntityManager getEntityManagerFactory() {
-        return emf.createEntityManager();
-    }
+     public static EntityManager getEntityManager(){
+            return emf.createEntityManager();
+     }
 
-    public static void closeEntityManagerFactory() {
-        emf.close();
-    }
+     public static void closeEntityManagerFactory(){
+            emf.close();
+     }
+
 }

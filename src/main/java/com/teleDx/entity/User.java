@@ -8,21 +8,25 @@ import lombok.Setter;
 
 @Entity
 @Table (name = "users")
-public class Users {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     protected String id;
     @Column(unique = true)
     protected String username;
     protected String password;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     protected Role role;
 
-    public Users() {
+    @OneToOne(mappedBy = "user")
+    private Medecin medecin;
+
+    public User() {
     }
 
-    public Users(String username, String password, Role role) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;

@@ -2,6 +2,7 @@ package com.teleDx.entity;
 import  jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "patient")
@@ -14,6 +15,9 @@ public class Patient {
     private LocalDate date_naissance;
     private String num_securite_soc;
     private String telephone;
+
+    @OneToMany(mappedBy = "patient")
+    private List<Consultation> consultations;
 
     public Patient() {
     }
@@ -73,4 +77,6 @@ public class Patient {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
+
+
 }

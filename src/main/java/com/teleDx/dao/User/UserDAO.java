@@ -10,7 +10,7 @@ public interface UserDAO {
     User save(User user);
     Optional<User> findById(String id);
     List<User> findAll();
-    void deletById(String id);
+    boolean deletById(String id);
     boolean existsById(String id);
 
     Optional<User> findByUsername(String username);

@@ -58,7 +58,7 @@ public class UserDAOImpl implements UserDAO{
     }
 
     @Override
-    public void deletById(String id) {
+    public boolean deletById(String id) {
         EntityManager em = JpaUtil.getEntityManager();
         EntityTransaction transaction = em.getTransaction();
 
@@ -69,11 +69,12 @@ public class UserDAOImpl implements UserDAO{
                 em.remove(user);
             }
             transaction.commit();
+            return true;
         } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Error deleting user: " + e.getMessage(), e);
+            return false;
         } finally {
             em.close();
         }

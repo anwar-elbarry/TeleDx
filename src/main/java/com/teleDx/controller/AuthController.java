@@ -1,7 +1,8 @@
 package com.teleDx.controller;
 
-import com.teleDx.service.user.UserService;
-import jakarta.inject.Inject;
+import com.teleDx.dao.user.UserDAOImpl;
+import com.teleDx.service.user.UserServiceImpl;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,8 +16,9 @@ import static java.lang.System.out;
 
 @WebServlet(name = "AuthController", urlPatterns = {"/login", "/logout"})
 public class AuthController extends HttpServlet {
-    @Inject
-    private UserService userService;
+
+    private final UserServiceImpl userService = new UserServiceImpl(new UserDAOImpl());
+
 
     @Override
     protected void doGet(HttpServletRequest req , HttpServletResponse resp)throws ServletException , IOException{
@@ -30,7 +32,7 @@ public class AuthController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req , HttpServletResponse resp)throws ServletException , IOException{
         String action  = req.getServletPath();
-        if("login".equals(req.getServletPath())){
+        if("/login".equals(req.getServletPath())){
             login(req,resp);
         }
     }

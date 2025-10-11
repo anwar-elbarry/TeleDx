@@ -1,4 +1,4 @@
-package com.teleDx.dao.User;
+package com.teleDx.dao.user;
 
 import com.teleDx.entity.Enums.RoleName;
 import com.teleDx.entity.User;

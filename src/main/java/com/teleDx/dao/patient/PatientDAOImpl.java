@@ -15,30 +15,31 @@ public class PatientDAOImpl implements PatientDAO {
     @Override
     public List<Patient> findAll() throws SQLException {
         EntityManager em = JpaUtil.getEntityManager();
-        try (em) {
-            EntityTransaction transaction = em.getTransaction();
-            transaction.begin();
-            String psql = "SELECT p FROM Patient p";
-            List<Patient> patients = em.createQuery(psql, Patient.class)
-                    .getResultList();
-            transaction.commit();
+        try {
+            String psql = "SELECT p FROM Patient p LEFT JOIN FETCH p.consultations";
+            List<Patient> patients = em.createQuery(psql, Patient.class).getResultList();
             return patients;
         } catch (Exception e) {
             throw new SQLException("Error retrieving patients: " + e.getMessage(), e);
+        }finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
     }
 
     @Override
     public Optional<Patient> findById(String id) throws SQLException {
         EntityManager em = JpaUtil.getEntityManager();
-        try (em) {
-            EntityTransaction transaction = em.getTransaction();
-            transaction.begin();
+        try  {
             Patient patient = em.find(Patient.class, id);
-            transaction.commit();
             return Optional.of(patient);
         } catch (Exception e) {
             throw new SQLException("Error retrieving patient: " + e.getMessage(), e);
+        }finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
         }
     }
 
@@ -46,7 +47,7 @@ public class PatientDAOImpl implements PatientDAO {
     public Patient save(Patient patient) throws SQLException {
         EntityManager em = JpaUtil.getEntityManager();
         EntityTransaction transaction = null;
-        try (em) {
+        try  {
             transaction = em.getTransaction();
             transaction.begin();
             em.persist(patient);

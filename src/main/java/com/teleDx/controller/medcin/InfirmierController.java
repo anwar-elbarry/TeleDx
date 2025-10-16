@@ -172,8 +172,8 @@ public class InfirmierController extends HttpServlet {
 
         patientService.save(patient);
         
-        // Redirect to queue or confirmation page
-        resp.sendRedirect(req.getContextPath() + "/dashboard/infirmier/queue");
+        // Redirect
+        resp.sendRedirect(req.getContextPath() + "/dashboard/infirmier");
     }
 
     private void handleUpdatePriority(HttpServletRequest req, HttpServletResponse resp) throws IOException, SQLException {

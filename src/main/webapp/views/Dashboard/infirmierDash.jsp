@@ -56,7 +56,16 @@
                 Nouvel Accueil Patient
             </button>
         </div>
-
+        <div class="mb-6">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <input type="text" id="searchInput" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Rechercher un patient par nom...">
+            </div>
+        </div>
        <!-- Full Patients List -->
        <div class="bg-white rounded-lg shadow overflow-hidden">
            <div class="px-6 py-4 border-b border-gray-200">
@@ -102,8 +111,16 @@
                        <!-- Example Patient Row -->
                       <c:forEach var="patient" items="${patients}" >
                        <tr class="hover:bg-gray-50">
-                           <td class="px-4 py-2">${patient.nom} </td>
-                           <td class="px-4 py-2">${patient.prenom}</td>
+                           <td class="px-4 py-2">
+                               <a href="#" onclick="showPatientDetails(event, '${patient.nom}', '${patient.prenom}', '${patient.date_naissance}', '${patient.num_securite_soc}', '${patient.telephone}', '${patient.email}')" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                       ${patient.nom}
+                               </a>
+                           </td>
+                           <td class="px-4 py-2">
+                               <a href="#" onclick="showPatientDetails(event, '${patient.nom}', '${patient.prenom}', '${patient.date_naissance}', '${patient.num_securite_soc}', '${patient.telephone}', '${patient.email}')" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                       ${patient.prenom}
+                               </a>
+                           </td>
                            <td class="px-4 py-2">${patient.date_naissance}</td>
                            <td class="px-4 py-2">${patient.num_securite_soc}</td>
                            <td class="px-4 py-2">${patient.telephone}</td>
@@ -144,9 +161,55 @@
                            <td class="px-4 py-2">3</td>
                        </tr>
                        </c:forEach>
-                       <!-- Add more rows for other patients -->
                    </tbody>
                </table>
+           </div>
+
+           <!-- Patient Details Modal -->
+           <div id="patientDetailsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+               <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+                   <div class="flex justify-between items-center mb-4">
+                       <h3 class="text-xl font-semibold text-gray-900">Détails du Patient</h3>
+                       <button onclick="closePatientDetails()" class="text-gray-400 hover:text-gray-600">
+                           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                           </svg>
+                       </button>
+                   </div>
+                   <div class="space-y-4">
+                       <div class="grid grid-cols-2 gap-4">
+                           <div>
+                               <p class="text-sm text-gray-500">Nom</p>
+                               <p id="detail-nom" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">Prénom</p>
+                               <p id="detail-prenom" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">Date de Naissance</p>
+                               <p id="detail-naissance" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">N° Sécurité Sociale</p>
+                               <p id="detail-secu" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">Téléphone</p>
+                               <p id="detail-tel" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">Email</p>
+                               <p id="detail-email" class="font-medium"></p>
+                           </div>
+                       </div>
+                       <div class="pt-4 border-t mt-4">
+                           <button onclick="closePatientDetails()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                               Fermer
+                           </button>
+                       </div>
+                   </div>
+               </div>
            </div>
        </div>
 
@@ -161,19 +224,6 @@
                     </svg>
                 </button>
             </div>
-
-            <!-- Search Patient Section -->
-            <div class="mb-6 p-4 bg-blue-50 rounded-lg">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher un patient existant</label>
-                <div class="flex gap-2">
-                    <input type="text" placeholder="N° Sécurité Sociale ou Nom" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition">
-                        Rechercher
-                    </button>
-                </div>
-            </div>
-
-
             <form action="${pageContext.request.contextPath}/dashboard/infirmier/save"  method="POST" class="space-y-6">
                 <!-- Personal Information -->
                 <div>
@@ -288,6 +338,7 @@
         </div>
     </div>
 
+</div>
     <script>
         function showModal() {
             document.getElementById('patientModal').classList.remove('hidden');
@@ -297,16 +348,65 @@
             document.getElementById('patientModal').classList.add('hidden');
         }
 
-        function logout() {
-            if(confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
-                window.location.href = 'login.jsp';
-            }
-        }
-
         // Close modal when clicking outside
         document.getElementById('patientModal').addEventListener('click', function(e) {
             if(e.target === this) {
                 closeModal();
             }
         });
+
+        // Search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const tableRows = document.querySelectorAll('tbody tr');
+            const resultCount = document.getElementById('resultCount');
+
+            function updateResultCount(count) {
+                resultCount.textContent = `${count} patient(s) trouvé(s)`;
+            }
+
+            function filterPatients() {
+                const searchTerm = searchInput.value.toLowerCase();
+                let visibleCount = 0;
+
+                tableRows.forEach(row => {
+                    const nameCells = row.querySelectorAll('td:first-child, td:nth-child(2)');
+                    let rowText = '';
+                    nameCells.forEach(cell => {
+                        rowText += ' ' + cell.textContent.toLowerCase();
+                    });
+
+                    if (rowText.includes(searchTerm)) {
+                        row.style.display = '';
+                        visibleCount++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+
+                updateResultCount(visibleCount);
+            }
+
+            // Initial count
+            updateResultCount(tableRows.length);
+
+            // Add event listener for search input
+            searchInput.addEventListener('input', filterPatients);
+        });
+
+        // Patient details modal functions
+        function showPatientDetails(event, nom, prenom, naissance, secu, tel, email) {
+            event.preventDefault();
+            document.getElementById('detail-nom').textContent = nom;
+            document.getElementById('detail-prenom').textContent = prenom;
+            document.getElementById('detail-naissance').textContent = naissance;
+            document.getElementById('detail-secu').textContent = secu;
+            document.getElementById('detail-tel').textContent = tel || 'Non renseigné';
+            document.getElementById('detail-email').textContent = email || 'Non renseigné';
+            document.getElementById('patientDetailsModal').classList.remove('hidden');
+        }
+
+        function closePatientDetails() {
+            document.getElementById('patientDetailsModal').classList.add('hidden');
+        }
     </script>

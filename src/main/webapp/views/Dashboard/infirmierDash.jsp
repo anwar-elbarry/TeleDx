@@ -56,6 +56,14 @@
                 Nouvel Accueil Patient
             </button>
         </div>
+        <div class="mb-6 flex gap-4">
+            <button onclick="switchTable('liste')" id="btnListe" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
+                Liste Complète
+            </button>
+            <button onclick="switchTable('attente')" id="btnAttente" class="px-6 py-2 bg-gray-400 text-white rounded-lg font-medium hover:bg-gray-500 transition">
+                File d'Attente
+            </button>
+        </div>
         <div class="mb-6">
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -67,6 +75,7 @@
             </div>
         </div>
        <!-- Full Patients List -->
+        <div id="tableList" class="bg-white rounded-lg shadow overflow-hidden">
        <div class="bg-white rounded-lg shadow overflow-hidden">
            <div class="px-6 py-4 border-b border-gray-200">
                <h2 class="text-lg font-semibold text-gray-900">Liste Complète des Patients</h2>
@@ -212,6 +221,82 @@
                </div>
            </div>
        </div>
+        </div>
+        <div id="tableAttente" class="hidden">
+            <!-- Queue Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <p class="text-sm text-gray-600">En attente</p>
+                    <p id="queueCount" class="text-2xl font-bold text-gray-900">0</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <p class="text-sm text-gray-600">Attente moyenne</p>
+                    <p id="avgWaitTime" class="text-2xl font-bold text-gray-900">0 min</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <p class="text-sm text-gray-600">Cas urgents</p>
+                    <p id="urgentCount" class="text-2xl font-bold text-red-600">0</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <p class="text-sm text-gray-600">Temps max</p>
+                    <p id="maxWaitTime" class="text-2xl font-bold text-gray-900">0 min</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">File d'Attente</h2>
+                    <p class="text-sm text-gray-600 mt-1">Patients en attente de consultation médicale</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Position</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Nom</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Prenom</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Date de Naissance</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Téléphone</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Heure d'Arrivee</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Temps d'Attente</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Priorite</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody class="bg-white divide-y divide-gray-200" id="attenteBody">
+                        <c:forEach var="patient" items="${patients}" varStatus="status">
+                            <c:if test="${patient.enAttenteMedecin}">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-2 font-bold text-blue-600">${status.index + 1}</td>
+                                    <td class="px-4 py-2">
+                                        <a href="#" onclick="showPatientDetails(event, '${patient.nom}', '${patient.prenom}', '${patient.date_naissance}', '${patient.num_securite_soc}', '${patient.telephone}', '${patient.email}')" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                ${patient.nom}
+                                        </a>
+                                    </td>
+                                    <td class="px-4 py-2">${patient.prenom}</td>
+                                    <td class="px-4 py-2">${patient.date_naissance}</td>
+                                    <td class="px-4 py-2">${patient.telephone}</td>
+                                    <td class="px-4 py-2">${patient.dateArrivee}</td>
+                                    <td class="px-4 py-2">25 min</td>
+                                    <td class="px-4 py-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                    Urgent
+                                </span>
+                                    </td>
+                                    <td class="px-4 py-2 flex gap-2">
+                                        <button class="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700" onclick="markAsConsulted(this)">Consulté</button>
+                                        <button class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700" onclick="removeFromQueue(this)">Retirer</button>
+                                    </td>
+                                </tr>
+                            </c:if>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     <!-- Modal for New Patient -->
     <div id="patientModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
@@ -237,7 +322,7 @@
                             <label for="prenom" class="block text-sm font-medium text-gray-700">First Name</label>
                             <input type="text" id="prenom" name="prenom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
-                        <div>
+                         <div>
                             <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date of Birth</label>
                             <input type="date" id="dateNaissance" name="dateNaissance" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
@@ -339,74 +424,175 @@
     </div>
 
 </div>
-    <script>
-        function showModal() {
-            document.getElementById('patientModal').classList.remove('hidden');
-        }
+  <script>
+      function showModal() {
+          document.getElementById('patientModal').classList.remove('hidden');
+      }
 
-        function closeModal() {
-            document.getElementById('patientModal').classList.add('hidden');
-        }
+      function closeModal() {
+          document.getElementById('patientModal').classList.add('hidden');
+      }
 
-        // Close modal when clicking outside
-        document.getElementById('patientModal').addEventListener('click', function(e) {
-            if(e.target === this) {
-                closeModal();
-            }
-        });
+      document.getElementById('patientModal').addEventListener('click', function(e) {
+          if(e.target === this) {
+              closeModal();
+          }
+      });
 
-        // Search functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('searchInput');
-            const tableRows = document.querySelectorAll('tbody tr');
-            const resultCount = document.getElementById('resultCount');
+      // Switch between tables
+      function switchTable(tableType) {
+          const tableList = document.getElementById('tableList');
+          const tableAttente = document.getElementById('tableAttente');
+          const btnListe = document.getElementById('btnListe');
+          const btnAttente = document.getElementById('btnAttente');
 
-            function updateResultCount(count) {
-                resultCount.textContent = `${count} patient(s) trouvé(s)`;
-            }
+          if (tableType === 'liste') {
+              tableList.classList.remove('hidden');
+              tableAttente.classList.add('hidden');
+              btnListe.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+              btnListe.classList.add('bg-blue-600', 'hover:bg-blue-700');
+              btnAttente.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+              btnAttente.classList.add('bg-gray-400', 'hover:bg-gray-500');
+          } else if (tableType === 'attente') {
+              tableList.classList.add('hidden');
+              tableAttente.classList.remove('hidden');
+              btnAttente.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+              btnAttente.classList.add('bg-blue-600', 'hover:bg-blue-700');
+              btnListe.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+              btnListe.classList.add('bg-gray-400', 'hover:bg-gray-500');
+          }
+      }
 
-            function filterPatients() {
-                const searchTerm = searchInput.value.toLowerCase();
-                let visibleCount = 0;
+      // Search functionality
+      document.addEventListener('DOMContentLoaded', function() {
+          const searchInput = document.getElementById('searchInput');
+          const listeRows = document.querySelectorAll('#listeBody tr');
+          const attenteRows = document.querySelectorAll('#attenteBody tr');
 
-                tableRows.forEach(row => {
-                    const nameCells = row.querySelectorAll('td:first-child, td:nth-child(2)');
-                    let rowText = '';
-                    nameCells.forEach(cell => {
-                        rowText += ' ' + cell.textContent.toLowerCase();
-                    });
+          function filterPatients() {
+              const searchTerm = searchInput.value.toLowerCase();
 
-                    if (rowText.includes(searchTerm)) {
-                        row.style.display = '';
-                        visibleCount++;
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
+              listeRows.forEach(row => {
+                  const nameCells = row.querySelectorAll('td:first-child, td:nth-child(2)');
+                  let rowText = '';
+                  nameCells.forEach(cell => {
+                      rowText += ' ' + cell.textContent.toLowerCase();
+                  });
+                  row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+              });
 
-                updateResultCount(visibleCount);
-            }
+              attenteRows.forEach(row => {
+                  const nameCells = row.querySelectorAll('td:nth-child(2), td:nth-child(3)');
+                  let rowText = '';
+                  nameCells.forEach(cell => {
+                      rowText += ' ' + cell.textContent.toLowerCase();
+                  });
+                  row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+              });
+          }
 
-            // Initial count
-            updateResultCount(tableRows.length);
+          searchInput.addEventListener('input', filterPatients);
+          updateQueueStats();
+      });
 
-            // Add event listener for search input
-            searchInput.addEventListener('input', filterPatients);
-        });
+      // Patient details modal functions
+      function showPatientDetails(event, nom, prenom, naissance, secu, tel, email) {
+          event.preventDefault();
+          document.getElementById('detail-nom').textContent = nom;
+          document.getElementById('detail-prenom').textContent = prenom;
+          document.getElementById('detail-naissance').textContent = naissance;
+          document.getElementById('detail-secu').textContent = secu;
+          document.getElementById('detail-tel').textContent = tel || 'Non renseigné';
+          document.getElementById('detail-email').textContent = email || 'Non renseigné';
+          document.getElementById('patientDetailsModal').classList.remove('hidden');
+      }
 
-        // Patient details modal functions
-        function showPatientDetails(event, nom, prenom, naissance, secu, tel, email) {
-            event.preventDefault();
-            document.getElementById('detail-nom').textContent = nom;
-            document.getElementById('detail-prenom').textContent = prenom;
-            document.getElementById('detail-naissance').textContent = naissance;
-            document.getElementById('detail-secu').textContent = secu;
-            document.getElementById('detail-tel').textContent = tel || 'Non renseigné';
-            document.getElementById('detail-email').textContent = email || 'Non renseigné';
-            document.getElementById('patientDetailsModal').classList.remove('hidden');
-        }
+      function closePatientDetails() {
+          document.getElementById('patientDetailsModal').classList.add('hidden');
+      }
 
-        function closePatientDetails() {
-            document.getElementById('patientDetailsModal').classList.add('hidden');
-        }
-    </script>
+      document.getElementById('patientDetailsModal').addEventListener('click', function(e) {
+          if(e.target === this) {
+              closePatientDetails();
+          }
+      });
+
+      // Mark patient as consulted
+      function markAsConsulted(button) {
+          const row = button.closest('tr');
+          row.style.opacity = '0.5';
+          button.disabled = true;
+          button.textContent = 'Consultation terminée';
+          button.classList.remove('bg-green-600', 'hover:bg-green-700');
+          button.classList.add('bg-gray-400', 'cursor-not-allowed');
+          updateQueueStats();
+      }
+
+      // Remove patient from queue
+      function removeFromQueue(button) {
+          const row = button.closest('tr');
+          row.style.transition = 'opacity 0.3s ease-out';
+          row.style.opacity = '0';
+          setTimeout(() => {
+              row.remove();
+              updateQueuePositions();
+              updateQueueStats();
+          }, 300);
+      }
+
+      // Update queue positions after removal
+      function updateQueuePositions() {
+          const rows = document.querySelectorAll('#attenteBody tr');
+          rows.forEach((row, index) => {
+              const positionCell = row.querySelector('td:first-child');
+              positionCell.textContent = index + 1;
+          });
+      }
+
+      // Update queue statistics
+      function updateQueueStats() {
+          const rows = document.querySelectorAll('#attenteBody tr');
+          const queueCount = rows.length;
+          document.getElementById('queueCount').textContent = queueCount;
+
+          let totalWaitTime = 0;
+          let maxWaitTime = 0;
+          let urgentCount = 0;
+
+          rows.forEach(row => {
+              const timeCell = row.querySelector('td:nth-child(7)');
+              const priorityCell = row.querySelector('td:nth-child(8)');
+              const timeText = timeCell.textContent.trim();
+              const minutes = parseInt(timeText);
+
+              if (!isNaN(minutes)) {
+                  totalWaitTime += minutes;
+                  if (minutes > maxWaitTime) {
+                      maxWaitTime = minutes;
+                  }
+              }
+
+              if (priorityCell.textContent.includes('Urgent')) {
+                  urgentCount++;
+              }
+          });
+
+          const avgWaitTime = queueCount > 0 ? Math.round(totalWaitTime / queueCount) : 0;
+          document.getElementById('avgWaitTime').textContent = avgWaitTime + ' min';
+          document.getElementById('maxWaitTime').textContent = maxWaitTime + ' min';
+          document.getElementById('urgentCount').textContent = urgentCount;
+      }
+
+      // Auto-update wait times every minute
+      setInterval(function() {
+          const cells = document.querySelectorAll('#attenteBody td:nth-child(7)');
+          cells.forEach(cell => {
+              const timeText = cell.textContent.trim();
+              const minutes = parseInt(timeText);
+              if (!isNaN(minutes)) {
+                  cell.textContent = (minutes + 1) + ' min';
+              }
+          });
+          updateQueueStats();
+      }, 60000);
+  </script>

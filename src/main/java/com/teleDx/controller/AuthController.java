@@ -1,6 +1,7 @@
 package com.teleDx.controller;
 
 import com.teleDx.dao.user.UserDAOImpl;
+import com.teleDx.entity.User;
 import com.teleDx.service.user.UserServiceImpl;
 
 import jakarta.servlet.ServletException;
@@ -23,15 +24,15 @@ public class AuthController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req , HttpServletResponse resp)throws ServletException , IOException{
         String action  = req.getServletPath();
-        if("logout".equals(req.getServletPath())){
+        if("/logout".equals(req.getServletPath())){
             logout(req,resp);
-        }else{
+        }
+        else{
             req.getRequestDispatcher("/views/login.jsp").forward(req,resp);
         }
     }
     @Override
     protected void doPost(HttpServletRequest req , HttpServletResponse resp)throws ServletException , IOException{
-        String action  = req.getServletPath();
         if("/login".equals(req.getServletPath())){
             login(req,resp);
         }
@@ -61,11 +62,10 @@ public class AuthController extends HttpServlet {
 
     private void logout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession(false);
-        if (session != null){
+        if (session != null) {
             session.invalidate();
         }
-        resp.sendRedirect(req.getContextPath()+"/");
+        resp.sendRedirect(req.getContextPath() + "/");
     }
-}
-
+    }
 

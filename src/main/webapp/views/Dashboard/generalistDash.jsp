@@ -1,31 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Generalist Dashboard - TeleDx</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord Generaliste</title>
-</head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <h1 class="text-xl font-bold text-blue-600">Système Télé-Expertise</h1>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-700">Dr. <strong>Hassan Tazi</strong> - Généraliste</span>
-                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                        Déconnexion
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<script>
+    const BASE = '${pageContext.request.contextPath}';
+</script>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -340,15 +318,12 @@
                 </button>
             </div>
 
-            <form class="space-y-6">
+            <form id="consultationForm" class="space-y-6">
                 <!-- Patient Selection -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Sélectionner un patient *</label>
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select id="patientSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         <option value="">-- Choisir un patient --</option>
-                        <option value="1">Ahmed Bennani - 45 ans - N° 1 85 03 75 123 456</option>
-                        <option value="2">Fatima El Amrani - 32 ans - N° 2 90 06 15 234 567</option>
-                        <option value="3">Mohammed Kadiri - 58 ans - N° 1 67 01 20 345 678</option>
                     </select>
                 </div>
 
@@ -371,22 +346,22 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Motif de consultation *</label>
-                        <input type="text" placeholder="Ex: Douleurs abdominales, Fièvre..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <input id="motifInput" type="text" placeholder="Ex: Douleurs abdominales, Fièvre..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Examen clinique</label>
-                        <textarea rows="3" placeholder="Observations de l'examen physique..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        <textarea id="examenInput" rows="3" placeholder="Observations de l'examen physique..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Analyse des symptômes</label>
-                        <textarea rows="3" placeholder="Symptômes rapportés par le patient..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        <textarea id="symptInput" rows="3" placeholder="Symptômes rapportés par le patient..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Observations générales</label>
-                        <textarea rows="3" placeholder="Autres observations..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        <textarea id="observationsInput" rows="3" placeholder="Autres observations..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                     </div>
                 </div>
 
@@ -457,7 +432,7 @@
                 </button>
             </div>
 
-            <form class="space-y-6">
+            <form id="expertiseForm" class="space-y-6">
                 <!-- Specialty Selection -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Spécialité requise *</label>
@@ -475,114 +450,20 @@
                 <!-- Specialists List -->
                 <div id="specialistsList" class="hidden">
                     <label class="block text-sm font-medium text-gray-700 mb-3">Spécialistes disponibles</label>
-                    <div class="space-y-3">
-                        <!-- Specialist Card 1 -->
-                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition" onclick="selectSpecialist(1)">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-start gap-3">
-                                    <input type="radio" name="specialist" value="1" class="mt-1">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Dr. Laila Bennani</h4>
-                                        <p class="text-sm text-gray-600">Dermatologue</p>
-                                        <div class="flex items-center gap-2 mt-1">
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                Disponible
-                                            </span>
-                                            <span class="text-xs text-gray-500">• 15 ans d'expérience</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-bold text-gray-900">300 DH</p>
-                                    <p class="text-xs text-gray-500">par consultation</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Specialist Card 2 -->
-                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition" onclick="selectSpecialist(2)">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-start gap-3">
-                                    <input type="radio" name="specialist" value="2" class="mt-1">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Dr. Karim Idrissi</h4>
-                                        <p class="text-sm text-gray-600">Dermatologue</p>
-                                        <div class="flex items-center gap-2 mt-1">
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                Disponible
-                                            </span>
-                                            <span class="text-xs text-gray-500">• 10 ans d'expérience</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-bold text-gray-900">250 DH</p>
-                                    <p class="text-xs text-gray-500">par consultation</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Specialist Card 3 -->
-                        <div class="border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition" onclick="selectSpecialist(3)">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-start gap-3">
-                                    <input type="radio" name="specialist" value="3" class="mt-1">
-                                    <div>
-                                        <h4 class="font-medium text-gray-900">Dr. Amina Tazi</h4>
-                                        <p class="text-sm text-gray-600">Dermatologue</p>
-                                        <div class="flex items-center gap-2 mt-1">
-                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                Disponible
-                                            </span>
-                                            <span class="text-xs text-gray-500">• 20 ans d'expérience</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-bold text-gray-900">400 DH</p>
-                                    <p class="text-xs text-gray-500">par consultation</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="specialistsContainer" class="space-y-3"></div>
                 </div>
 
                 <!-- Time Slots -->
                 <div id="timeSlotsSection" class="hidden">
                     <label class="block text-sm font-medium text-gray-700 mb-3">Créneaux disponibles</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <button type="button" onclick="selectSlot(this)" class="time-slot border-2 border-gray-300 rounded-lg p-3 text-sm hover:border-blue-500 transition">
-                            <div class="font-medium text-gray-900">Aujourd'hui</div>
-                            <div class="text-gray-600">14:00 - 14:30</div>
-                        </button>
-                        <button type="button" onclick="selectSlot(this)" class="time-slot border-2 border-gray-300 rounded-lg p-3 text-sm hover:border-blue-500 transition">
-                            <div class="font-medium text-gray-900">Aujourd'hui</div>
-                            <div class="text-gray-600">15:00 - 15:30</div>
-                        </button>
-                        <button type="button" onclick="selectSlot(this)" class="time-slot border-2 border-gray-300 rounded-lg p-3 text-sm hover:border-blue-500 transition">
-                            <div class="font-medium text-gray-900">Aujourd'hui</div>
-                            <div class="text-gray-600">16:00 - 16:30</div>
-                        </button>
-                        <button type="button" onclick="selectSlot(this)" class="time-slot border-2 border-gray-300 rounded-lg p-3 text-sm hover:border-blue-500 transition">
-                            <div class="font-medium text-gray-900">Demain</div>
-                            <div class="text-gray-600">09:00 - 09:30</div>
-                        </button>
-                        <button type="button" onclick="selectSlot(this)" class="time-slot border-2 border-gray-300 rounded-lg p-3 text-sm hover:border-blue-500 transition">
-                            <div class="font-medium text-gray-900">Demain</div>
-                            <div class="text-gray-600">10:00 - 10:30</div>
-                        </button>
-                        <button type="button" onclick="selectSlot(this)" class="time-slot border-2 border-gray-300 rounded-lg p-3 text-sm hover:border-blue-500 transition">
-                            <div class="font-medium text-gray-900">Demain</div>
-                            <div class="text-gray-600">11:00 - 11:30</div>
-                        </button>
-                    </div>
+                    <div id="timeSlotsContainer" class="grid grid-cols-3 gap-3"></div>
                 </div>
 
                 <!-- Question and Details -->
                 <div id="questionSection" class="hidden space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Question au spécialiste *</label>
-                        <textarea rows="4" placeholder="Décrivez précisément la question que vous souhaitez poser au spécialiste..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                        <textarea id="questionInput" rows="4" placeholder="Décrivez précisément la question que vous souhaitez poser au spécialiste..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
                     </div>
 
                     <div>
@@ -592,7 +473,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Niveau de priorité *</label>
-                        <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <select id="prioriteSelect" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                             <option value="URGENTE">URGENTE - Réponse dans les 2h</option>
                             <option value="NORMALE" selected>NORMALE - Réponse sous 24h</option>
                             <option value="NON_URGENTE">NON URGENTE - Réponse sous 48h</option>
@@ -601,29 +482,29 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Actes techniques médicaux</label>
-                        <div class="grid grid-cols-2 gap-3">
+                        <div id="actesContainer" class="grid grid-cols-2 gap-3">
                             <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="rounded">
+                                <input type="checkbox" class="rounded" data-cost="100">
                                 <span class="text-sm">Radiographie (100 DH)</span>
                             </label>
                             <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="rounded">
+                                <input type="checkbox" class="rounded" data-cost="150">
                                 <span class="text-sm">Échographie (150 DH)</span>
                             </label>
                             <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="rounded">
+                                <input type="checkbox" class="rounded" data-cost="800">
                                 <span class="text-sm">IRM (800 DH)</span>
                             </label>
                             <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="rounded">
+                                <input type="checkbox" class="rounded" data-cost="80">
                                 <span class="text-sm">Électrocardiogramme (80 DH)</span>
                             </label>
                             <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="rounded">
+                                <input type="checkbox" class="rounded" data-cost="120">
                                 <span class="text-sm">Analyse de sang (120 DH)</span>
                             </label>
                             <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer">
-                                <input type="checkbox" class="rounded">
+                                <input type="checkbox" class="rounded" data-cost="60">
                                 <span class="text-sm">Analyse d'urine (60 DH)</span>
                             </label>
                         </div>
@@ -704,29 +585,84 @@
             document.getElementById('expertiseModal').classList.add('hidden');
         }
 
-        function logout() {
-            if(confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
-                window.location.href = 'login.jsp';
-            }
-        }
-
         // Expertise Modal Functions
+        let currentConsultationId = null;
+        let selectedSpecialisteId = null;
+        let selectedExpertiseTarif = 0;
+        let selectedCreneauId = null;
+
         function loadSpecialists() {
             const specialty = document.getElementById('specialtySelect').value;
-            if(specialty) {
-                document.getElementById('specialistsList').classList.remove('hidden');
-            } else {
-                document.getElementById('specialistsList').classList.add('hidden');
+            const listEl = document.getElementById('specialistsList');
+            const container = document.getElementById('specialistsContainer');
+            container.innerHTML = '';
+            if (!specialty) {
+                listEl.classList.add('hidden');
                 document.getElementById('timeSlotsSection').classList.add('hidden');
                 document.getElementById('questionSection').classList.add('hidden');
                 document.getElementById('totalCostSection').classList.add('hidden');
+                return;
             }
+            fetch(BASE + '/dashboard/generaliste/specialistes/disponibles?specialite=' + encodeURIComponent(specialty))
+                .then(r => r.json())
+                .then(medecins => {
+                    listEl.classList.remove('hidden');
+                    medecins.forEach(m => {
+                        const card = document.createElement('div');
+                        card.className = 'border border-gray-200 rounded-lg p-4 hover:border-blue-500 cursor-pointer transition';
+                        card.innerHTML =
+                            '<div class="flex justify-between items-start">\n' +
+                                '    <div class="flex items-start gap-3">\n' +
+                                '        <input type="radio" name="specialist" value="' + m.id + '" class="mt-1">\n' +
+                                '        <div>\n' +
+                                '            <h4 class="font-medium text-gray-900">Dr. ' + m.nom + '</h4>\n' +
+                                '            <p class="text-sm text-gray-600">' + (m.specialite || '') + '</p>\n' +
+                                '            <div class="flex items-center gap-2 mt-1">\n' +
+                                '                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Disponible</span>\n' +
+                                '            </div>\n' +
+                                '        </div>\n' +
+                                '    </div>\n' +
+                                '    <div class="text-right">\n' +
+                                '        <p class="text-lg font-bold text-gray-900">' + (m.tarif || 0) + ' DH</p>\n' +
+                                '        <p class="text-xs text-gray-500">par consultation</p>\n' +
+                                '    </div>\n' +
+                                '</div>';
+                        container.appendChild(card);
+                        card.addEventListener('click', () => selectSpecialist(String(m.id), String(m.tarif || 0)));
+                        card.querySelector('input[type="radio"]').addEventListener('change', () => selectSpecialist(String(m.id), String(m.tarif || 0)));
+                    });
+                })
+                .catch(() => {
+                    listEl.classList.add('hidden');
+                });
         }
 
-        function selectSpecialist(id) {
-            document.getElementById('timeSlotsSection').classList.remove('hidden');
+        function selectSpecialist(id, tarif) {
+            selectedSpecialisteId = id;
+            selectedExpertiseTarif = parseFloat(tarif || '0');
+            const section = document.getElementById('timeSlotsSection');
+            const container = document.getElementById('timeSlotsContainer');
+            container.innerHTML = '';
+            section.classList.remove('hidden');
             document.getElementById('questionSection').classList.add('hidden');
             document.getElementById('totalCostSection').classList.add('hidden');
+
+            fetch(BASE + '/dashboard/generaliste/creneaux?specialisteId=' + encodeURIComponent(id) + '&disponibles=true')
+                .then(r => r.json())
+                .then(creneaux => {
+                    creneaux.forEach(c => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'time-slot border-2 border-gray-300 rounded-lg p-3 text-sm hover:border-blue-500 transition text-left';
+                        btn.dataset.id = c.id;
+                        btn.innerHTML = '<div class="font-medium text-gray-900">Créneau</div><div class="text-gray-600">' + c.heure_debut + ' - ' + c.heure_fin + '</div>';
+                        btn.addEventListener('click', () => selectSlot(btn));
+                        container.appendChild(btn);
+                    });
+                })
+                .catch(() => {
+                    section.classList.add('hidden');
+                });
         }
 
         function selectSlot(element) {
@@ -737,10 +673,12 @@
 
             // Add selected class to clicked slot
             element.classList.add('border-blue-500', 'bg-blue-50');
+            selectedCreneauId = element.dataset.id || null;
 
             // Show question section and total cost
             document.getElementById('questionSection').classList.remove('hidden');
             document.getElementById('totalCostSection').classList.remove('hidden');
+            calculateTotal();
         }
 
         function startConsultation(patientName) {
@@ -770,32 +708,129 @@
 
         // Calculate total cost when checkboxes change
         document.addEventListener('DOMContentLoaded', function() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', calculateTotal);
+            // Load only waiting patients
+            fetch(BASE + '/dashboard/generaliste/patients')
+                .then(r => r.json())
+                .then(patients => {
+                    const sel = document.getElementById('patientSelect');
+                    patients.forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        const idLine = p.num_securite_soc ? (' - N° ' + p.num_securite_soc) : '';
+                        opt.textContent = (p.nom || '') + ' ' + (p.prenom || '') + idLine;
+                        sel.appendChild(opt);
+                    });
+                })
+                .catch(() => {});
+            // Load patients for select
+            fetch(BASE + '/dashboard/generaliste/patients')
+                .then(r => r.json())
+                .then(patients => {
+                    const sel = document.getElementById('patientSelect');
+                    // keep first placeholder option
+                    patients.forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        const idLine = p.num_securite_soc ? (' - N° ' + p.num_securite_soc) : '';
+                        const ageLine = p.date_naissance ? '' : '';
+                        opt.textContent = (p.nom || '') + ' ' + (p.prenom || '') + idLine;
+                        sel.appendChild(opt);
+                    });
+                })
+                .catch(() => {});
+
+            document.querySelectorAll('#actesContainer input[type="checkbox"]').forEach(cb => cb.addEventListener('change', calculateTotal));
+
+            document.getElementById('consultationForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const patientId = (document.getElementById('patientSelect').value || '').trim();
+                const motif = (document.getElementById('motifInput').value || '').trim();
+                const obs = [
+                    document.getElementById('examenInput').value || '',
+                    document.getElementById('symptInput').value || '',
+                    document.getElementById('observationsInput').value || ''
+                ].filter(Boolean).join(' | ');
+                if (!patientId || !motif) {
+                    alert('Veuillez sélectionner un patient et renseigner le motif.');
+                    return;
+                }
+                const formData = new URLSearchParams();
+                formData.append('patientId', patientId);
+                formData.append('motif', motif);
+                formData.append('observations', obs);
+                const resp = await fetch(BASE + '/dashboard/generaliste/consultation/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                const text = await resp.text();
+                const match = text.match(/id:\s*(\S+)/i);
+                if (resp.ok && match) {
+                    currentConsultationId = match[1];
+                    alert('Consultation créée');
+                    closeConsultationModal();
+                } else {
+                    alert('Erreur lors de la création de la consultation');
+                }
+            });
+
+            document.getElementById('expertiseForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                if (!currentConsultationId) {
+                    alert('Créez d\'abord une consultation.');
+                    return;
+                }
+                if (!selectedSpecialisteId || !selectedCreneauId) {
+                    alert('Sélectionnez un spécialiste et un créneau.');
+                    return;
+                }
+                const priorite = document.getElementById('prioriteSelect').value;
+                const question = (document.getElementById('questionInput').value || '').trim();
+                if (!question) {
+                    alert('Veuillez saisir la question au spécialiste.');
+                    return;
+                }
+                const formData = new URLSearchParams();
+                formData.append('consultationId', currentConsultationId);
+                formData.append('specialisteId', selectedSpecialisteId);
+                formData.append('question', question);
+                formData.append('priorite', priorite);
+                formData.append('creneauId', selectedCreneauId);
+                const resp = await fetch(BASE + '/dashboard/generaliste/expertise/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                if (resp.ok) {
+                    alert('Demande d\'expertise envoyée');
+                    closeExpertiseModal();
+                } else {
+                    alert('Erreur lors de la demande d\'expertise');
+                }
             });
         });
 
         function calculateTotal() {
-            let actesCost = 0;
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-
-            checkboxes.forEach(checkbox => {
-                const text = checkbox.parentElement.textContent;
-                const match = text.match(/\((\d+) DH\)/);
-                if(match) {
-                    actesCost += parseInt(match[1]);
-                }
-            });
-
-            document.getElementById('actesCost').textContent = actesCost + ' DH';
-
-            const consultationCost = 150;
-            const expertiseCost = 300;
-            const total = consultationCost + expertiseCost + actesCost;
-
-            document.getElementById('totalCost').textContent = total + ' DH';
+            const acts = Array.from(document.querySelectorAll('#actesContainer input[type="checkbox"]:checked'))
+                .map(cb => cb.getAttribute('data-cost'))
+                .join(',');
+            const params = new URLSearchParams();
+            params.append('expertiseTarif', String(selectedExpertiseTarif || 0));
+            if (acts) params.append('acts', acts);
+            fetch(BASE + '/dashboard/generaliste/cout-total?' + params.toString())
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('expertiseCost').textContent = String(data.expertise) + ' DH';
+                    document.getElementById('actesCost').textContent = String(data.acts) + ' DH';
+                    document.getElementById('totalCost').textContent = String(data.total) + ' DH';
+                })
+                .catch(() => {
+                    const consultationCost = 150;
+                    const actsSum = (acts || '').split(',').filter(Boolean).map(Number).reduce((a,b)=>a+b,0);
+                    const total = consultationCost + (selectedExpertiseTarif||0) + actsSum;
+                    document.getElementById('expertiseCost').textContent = String(selectedExpertiseTarif||0) + ' DH';
+                    document.getElementById('actesCost').textContent = String(actsSum) + ' DH';
+                    document.getElementById('totalCost').textContent = String(total) + ' DH';
+                });
         }
     </script>
-</body>
-</html>

@@ -45,25 +45,25 @@ public class DashboardController extends HttpServlet {
         req.setAttribute("user", user);
 
         // Route to appropriate dashboard based on role
-        String dashboardPath = getDashboardPath(user.getRole().getNom());
-        req.getRequestDispatcher(dashboardPath).forward(req, resp);
+        String dashboardPath = getDashboardControllerPath(user.getRole().getNom());
+        resp.sendRedirect(req.getContextPath() + dashboardPath);
     }
 
     private boolean isMedicalRole(RoleName roleName) {
         return MEDICAL_ROLES.contains(roleName);
     }
 
-    private String getDashboardPath(RoleName roleName) {
+    private String getDashboardControllerPath(RoleName roleName) {
         switch (roleName) {
             case INFIRMIER:
-                return "/views/Dashboard/infirmierDash.jsp";
+                return "/dashboard/infirmier";
             case GENERALISTE:
-                return "/views/Dashboard/generalistDash.jsp";
+                return "/dashboard/generalistDash";
             case SPECIALISTE:
-                return "/views/Dashboard/specialistDash.jsp";
+                return "/dashboard/specialistDash";
             default:
                 // Fallback to infirmier if role doesn't match
-                return "/views/Dashboard/infirmierDash.jsp";
+                return "/dashboard/infirmierDash";
         }
     }
 

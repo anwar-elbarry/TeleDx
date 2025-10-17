@@ -1,31 +1,6 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Infirmier Dashboard - TeleDx</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tableau de Bord Infirmier</title>
-</head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <h1 class="text-xl font-bold text-blue-600">Système Télé-Expertise</h1>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-700">Infirmier: <strong>Marie Dubois</strong></span>
-                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                        Déconnexion
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
+  <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+   <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -81,131 +56,247 @@
                 Nouvel Accueil Patient
             </button>
         </div>
-
-        <!-- Patients List -->
-        <div class="bg-white rounded-lg shadow overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-900">Liste des Patients Enregistrés</h2>
-                <p class="text-sm text-gray-600 mt-1">Patients du jour - Triés par heure d'arrivée</p>
-            </div>
-
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Patient</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">N° Sécurité Sociale</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Heure d'arrivée</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Signes Vitaux</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">Ahmed Bennani</div>
-                                <div class="text-sm text-gray-500">45 ans</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1 85 03 75 123 456</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">08:15</td>
-                            <td class="px-6 py-4">
-                                <div class="text-xs space-y-1">
-                                    <div><span class="font-medium">TA:</span> 120/80 mmHg</div>
-                                    <div><span class="font-medium">FC:</span> 72 bpm</div>
-                                    <div><span class="font-medium">Temp:</span> 36.8°C</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    En attente
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">Fatima El Amrani</div>
-                                <div class="text-sm text-gray-500">32 ans</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2 90 06 15 234 567</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">08:30</td>
-                            <td class="px-6 py-4">
-                                <div class="text-xs space-y-1">
-                                    <div><span class="font-medium">TA:</span> 115/75 mmHg</div>
-                                    <div><span class="font-medium">FC:</span> 68 bpm</div>
-                                    <div><span class="font-medium">Temp:</span> 37.2°C</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    En attente
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">Mohammed Kadiri</div>
-                                <div class="text-sm text-gray-500">58 ans</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1 67 01 20 345 678</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">08:45</td>
-                            <td class="px-6 py-4">
-                                <div class="text-xs space-y-1">
-                                    <div><span class="font-medium">TA:</span> 140/90 mmHg</div>
-                                    <div><span class="font-medium">FC:</span> 85 bpm</div>
-                                    <div><span class="font-medium">Temp:</span> 36.5°C</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    En attente
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">Samira Benjelloun</div>
-                                <div class="text-sm text-gray-500">27 ans</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2 98 04 10 456 789</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">09:00</td>
-                            <td class="px-6 py-4">
-                                <div class="text-xs space-y-1">
-                                    <div><span class="font-medium">TA:</span> 110/70 mmHg</div>
-                                    <div><span class="font-medium">FC:</span> 65 bpm</div>
-                                    <div><span class="font-medium">Temp:</span> 36.9°C</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                    En consultation
-                                </span>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">Youssef Alami</div>
-                                <div class="text-sm text-gray-500">51 ans</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">1 72 08 18 567 890</td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">09:15</td>
-                            <td class="px-6 py-4">
-                                <div class="text-xs space-y-1">
-                                    <div><span class="font-medium">TA:</span> 125/82 mmHg</div>
-                                    <div><span class="font-medium">FC:</span> 78 bpm</div>
-                                    <div><span class="font-medium">Temp:</span> 37.0°C</div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                    En attente
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="mb-6 flex gap-4">
+            <button onclick="switchTable('liste')" id="btnListe" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition">
+                Liste Complète
+            </button>
+            <button onclick="switchTable('attente')" id="btnAttente" class="px-6 py-2 bg-gray-400 text-white rounded-lg font-medium hover:bg-gray-500 transition">
+                File d'Attente
+            </button>
+        </div>
+        <div class="mb-6">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <input type="text" id="searchInput" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Rechercher un patient par nom...">
             </div>
         </div>
-    </div>
+       <!-- Full Patients List -->
+        <div id="tableList" class="bg-white rounded-lg shadow overflow-hidden">
+       <div class="bg-white rounded-lg shadow overflow-hidden">
+           <div class="px-6 py-4 border-b border-gray-200">
+               <h2 class="text-lg font-semibold text-gray-900">Liste Complète des Patients</h2>
+               <p class="text-sm text-gray-600 mt-1">Toutes les informations disponibles sur les patients enregistres</p>
+           </div>
+
+           <div class="overflow-x-auto">
+               <table class="min-w-full divide-y divide-gray-200 text-sm">
+                   <thead class="bg-gray-50">
+                       <tr>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Nom</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Prenom</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Date de Naissance</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">N° Securite Sociale</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Téléphone</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Email</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Adresse</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Ville</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Code Postal</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Mutuelle</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">N° Mutuelle</th>
+
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Antecedents</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Allergies</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Traitements en cours</th>
+
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Poids (kg)</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Taille (cm)</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Temperature (°C)</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Tension Arterielle</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Fréq. Cardiaque (bpm)</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Fréq. Respiratoire (resp/min)</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Groupe Sanguin</th>
+
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Heure d’Arrivee</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">En Attente Médecin</th>
+                           <th class="px-4 py-2 text-left font-semibold text-gray-600">Priorite</th>
+                       </tr>
+                   </thead>
+
+                   <tbody class="bg-white divide-y divide-gray-200">
+                       <!-- Example Patient Row -->
+                      <c:forEach var="patient" items="${patients}" >
+                       <tr class="hover:bg-gray-50">
+                           <td class="px-4 py-2">
+                               <a href="#" onclick="showPatientDetails(event, '${patient.nom}', '${patient.prenom}', '${patient.date_naissance}', '${patient.num_securite_soc}', '${patient.telephone}', '${patient.email}')" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                       ${patient.nom}
+                               </a>
+                           </td>
+                           <td class="px-4 py-2">
+                               <a href="#" onclick="showPatientDetails(event, '${patient.nom}', '${patient.prenom}', '${patient.date_naissance}', '${patient.num_securite_soc}', '${patient.telephone}', '${patient.email}')" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                       ${patient.prenom}
+                               </a>
+                           </td>
+                           <td class="px-4 py-2">${patient.date_naissance}</td>
+                           <td class="px-4 py-2">${patient.num_securite_soc}</td>
+                           <td class="px-4 py-2">${patient.telephone}</td>
+                           <td class="px-4 py-2">${patient.email}</td>
+                           <td class="px-4 py-2">${patient.adresse}</td>
+                           <td class="px-4 py-2">${patient.ville}</td>
+                           <td class="px-4 py-2">${patient.codePostal}</td>
+                           <td class="px-4 py-2">${patient.mutuelle}</td>
+                           <td class="px-4 py-2">${patient.numMutuelle}</td>
+
+                           <td class="px-4 py-2">${patient.antecedents}</td>
+                           <td class="px-4 py-2">${patient.allergies}</td>
+                           <td class="px-4 py-2">${patient.traitementsEnCours}</td>
+
+                           <td class="px-4 py-2">${patient.poids}</td>
+                           <td class="px-4 py-2">${patient.taille}</td>
+                           <td class="px-4 py-2">${patient.temperature}</td>
+                           <td class="px-4 py-2">${patient.tensionArterielle}</td>
+                           <td class="px-4 py-2">${patient.frequenceCardiaque}</td>
+                           <td class="px-4 py-2">${patient.frequenceRespiratoire}</td>
+                           <td class="px-4 py-2">${patient.groupeSanguin}</td>
+
+                           <td class="px-4 py-2">${patient.dateArrivee}</td>
+                           <td class="px-4 py-2">
+                               <c:choose>
+                                   <c:when test="${patient.enAttenteMedecin}">
+                                       <span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                           En attente
+                                       </span>
+                                   </c:when>
+                                   <c:otherwise>
+                                       <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                                           Consulté
+                                       </span>
+                                   </c:otherwise>
+                               </c:choose>
+                           </td>
+                           <td class="px-4 py-2">3</td>
+                       </tr>
+                       </c:forEach>
+                   </tbody>
+               </table>
+           </div>
+
+           <!-- Patient Details Modal -->
+           <div id="patientDetailsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+               <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+                   <div class="flex justify-between items-center mb-4">
+                       <h3 class="text-xl font-semibold text-gray-900">Détails du Patient</h3>
+                       <button onclick="closePatientDetails()" class="text-gray-400 hover:text-gray-600">
+                           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                           </svg>
+                       </button>
+                   </div>
+                   <div class="space-y-4">
+                       <div class="grid grid-cols-2 gap-4">
+                           <div>
+                               <p class="text-sm text-gray-500">Nom</p>
+                               <p id="detail-nom" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">Prénom</p>
+                               <p id="detail-prenom" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">Date de Naissance</p>
+                               <p id="detail-naissance" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">N° Sécurité Sociale</p>
+                               <p id="detail-secu" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">Téléphone</p>
+                               <p id="detail-tel" class="font-medium"></p>
+                           </div>
+                           <div>
+                               <p class="text-sm text-gray-500">Email</p>
+                               <p id="detail-email" class="font-medium"></p>
+                           </div>
+                       </div>
+                       <div class="pt-4 border-t mt-4">
+                           <button onclick="closePatientDetails()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                               Fermer
+                           </button>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+        </div>
+        <div id="tableAttente" class="hidden">
+            <!-- Queue Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <p class="text-sm text-gray-600">En attente</p>
+                    <p id="queueCount" class="text-2xl font-bold text-gray-900">0</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <p class="text-sm text-gray-600">Attente moyenne</p>
+                    <p id="avgWaitTime" class="text-2xl font-bold text-gray-900">0 min</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <p class="text-sm text-gray-600">Cas urgents</p>
+                    <p id="urgentCount" class="text-2xl font-bold text-red-600">0</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <p class="text-sm text-gray-600">Temps max</p>
+                    <p id="maxWaitTime" class="text-2xl font-bold text-gray-900">0 min</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">File d'Attente</h2>
+                    <p class="text-sm text-gray-600 mt-1">Patients en attente de consultation médicale</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Position</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Nom</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Prenom</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Date de Naissance</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Téléphone</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Heure d'Arrivee</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Temps d'Attente</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Priorite</th>
+                            <th class="px-4 py-2 text-left font-semibold text-gray-600">Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody class="bg-white divide-y divide-gray-200" id="attenteBody">
+                        <c:forEach var="patient" items="${patients}" varStatus="status">
+                            <c:if test="${patient.enAttenteMedecin}">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-2 font-bold text-blue-600">${status.index + 1}</td>
+                                    <td class="px-4 py-2">
+                                        <a href="#" onclick="showPatientDetails(event, '${patient.nom}', '${patient.prenom}', '${patient.date_naissance}', '${patient.num_securite_soc}', '${patient.telephone}', '${patient.email}')" class="text-blue-600 hover:text-blue-800 hover:underline">
+                                                ${patient.nom}
+                                        </a>
+                                    </td>
+                                    <td class="px-4 py-2">${patient.prenom}</td>
+                                    <td class="px-4 py-2">${patient.date_naissance}</td>
+                                    <td class="px-4 py-2">${patient.telephone}</td>
+                                    <td class="px-4 py-2">${patient.dateArrivee}</td>
+                                    <td class="px-4 py-2">25 min</td>
+                                    <td class="px-4 py-2">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                                    Urgent
+                                </span>
+                                    </td>
+                                    <td class="px-4 py-2 flex gap-2">
+                                        <button class="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700" onclick="markAsConsulted(this)">Consulté</button>
+                                        <button class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700" onclick="removeFromQueue(this)">Retirer</button>
+                                    </td>
+                                </tr>
+                            </c:if>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
     <!-- Modal for New Patient -->
     <div id="patientModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
@@ -218,134 +309,290 @@
                     </svg>
                 </button>
             </div>
-
-            <!-- Search Patient Section -->
-            <div class="mb-6 p-4 bg-blue-50 rounded-lg">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Rechercher un patient existant</label>
-                <div class="flex gap-2">
-                    <input type="text" placeholder="N° Sécurité Sociale ou Nom" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition">
-                        Rechercher
-                    </button>
-                </div>
-            </div>
-
-            <form class="space-y-6">
+            <form action="${pageContext.request.contextPath}/dashboard/infirmier/save"  method="POST" class="space-y-6">
                 <!-- Personal Information -->
-                <div class="border-b border-gray-200 pb-6">
-                    <h4 class="text-lg font-medium text-gray-900 mb-4">Informations Personnelles</h4>
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Personal Information</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
-                            <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="nom" class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <input type="text" id="nom" name="nom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Prénom *</label>
-                            <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="prenom" class="block text-sm font-medium text-gray-700">First Name</label>
+                            <input type="text" id="prenom" name="prenom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                         <div>
+                            <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                            <input type="date" id="dateNaissance" name="dateNaissance" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Date de naissance *</label>
-                            <input type="date" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="telephone" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                            <input type="tel" id="telephone" name="telephone" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">N° Sécurité Sociale *</label>
-                            <input type="text" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" id="email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
-                            <input type="tel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="numSecu" class="block text-sm font-medium text-gray-700">Social Security Number</label>
+                            <input type="text" id="numSecu" name="numSecu" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vital Signs -->
-                <div>
-                    <h4 class="text-lg font-medium text-gray-900 mb-4">Signes Vitaux</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tension Artérielle *</label>
-                            <input type="text" placeholder="120/80" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="adresse" class="block text-sm font-medium text-gray-700">Address</label>
+                            <input type="text" id="adresse" name="adresse" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Fréquence Cardiaque *</label>
-                            <input type="number" placeholder="72 bpm" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="ville" class="block text-sm font-medium text-gray-700">City</label>
+                            <input type="text" id="ville" name="ville" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Température (°C) *</label>
-                            <input type="number" step="0.1" placeholder="36.8" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="codePostal" class="block text-sm font-medium text-gray-700">Postal Code</label>
+                            <input type="text" id="codePostal" name="codePostal" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Fréquence Respiratoire *</label>
-                            <input type="number" placeholder="16 /min" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="mutuelle" class="block text-sm font-medium text-gray-700">Insurance Provider</label>
+                            <input type="text" id="mutuelle" name="mutuelle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Poids (kg)</label>
-                            <input type="number" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Taille (cm)</label>
-                            <input type="number" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <label for="numMutuelle" class="block text-sm font-medium text-gray-700">Insurance Number</label>
+                            <input type="text" id="numMutuelle" name="numMutuelle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                 </div>
 
                 <!-- Medical Information -->
                 <div>
-                    <h4 class="text-lg font-medium text-gray-900 mb-4">Informations Médicales</h4>
-                    <div class="space-y-4">
+                    <h2 class="text-lg font-semibold mb-4">Medical Information</h2>
+                    <div class="grid grid-cols-1 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Antécédents médicaux</label>
-                            <textarea rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                            <label for="antecedents" class="block text-sm font-medium text-gray-700">Medical History</label>
+                            <textarea id="antecedents" name="antecedents" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Allergies</label>
-                            <textarea rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                            <label for="allergies" class="block text-sm font-medium text-gray-700">Allergies</label>
+                            <textarea id="allergies" name="allergies" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Traitements en cours</label>
-                            <textarea rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                            <label for="traitements" class="block text-sm font-medium text-gray-700">Current Treatments</label>
+                            <textarea id="traitements" name="traitements" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                        </div>
+                        <div>
+                            <label for="groupeSanguin" class="block text-sm font-medium text-gray-700">Blood Type</label>
+                            <input type="text" id="groupeSanguin" name="groupeSanguin" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                    <button type="button" onclick="closeModal()" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition">
-                        Annuler
-                    </button>
-                    <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
-                        Enregistrer et Ajouter à la File d'Attente
-                    </button>
+                <!-- Vital Signs -->
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Vital Signs</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="poids" class="block text-sm font-medium text-gray-700">Weight (kg)</label>
+                            <input type="number" id="poids" name="poids" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="taille" class="block text-sm font-medium text-gray-700">Height (cm)</label>
+                            <input type="number" id="taille" name="taille" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="temperature" class="block text-sm font-medium text-gray-700">Temperature (°C)</label>
+                            <input type="number" id="temperature" name="temperature" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="tension" class="block text-sm font-medium text-gray-700">Blood Pressure</label>
+                            <input type="text" id="tension" name="tension" placeholder="e.g., 120/80" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="freqCardiaque" class="block text-sm font-medium text-gray-700">Heart Rate (bpm)</label>
+                            <input type="number" id="freqCardiaque" name="freqCardiaque" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="freqRespiratoire" class="block text-sm font-medium text-gray-700">Respiratory Rate (breaths/min)</label>
+                            <input type="number" id="freqRespiratoire" name="freqRespiratoire" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <script>
-        function showModal() {
-            document.getElementById('patientModal').classList.remove('hidden');
-        }
+</div>
+  <script>
+      function showModal() {
+          document.getElementById('patientModal').classList.remove('hidden');
+      }
 
-        function closeModal() {
-            document.getElementById('patientModal').classList.add('hidden');
-        }
+      function closeModal() {
+          document.getElementById('patientModal').classList.add('hidden');
+      }
 
-        function logout() {
-            if(confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
-                window.location.href = 'login.jsp';
-            }
-        }
+      document.getElementById('patientModal').addEventListener('click', function(e) {
+          if(e.target === this) {
+              closeModal();
+          }
+      });
 
-        // Close modal when clicking outside
-        document.getElementById('patientModal').addEventListener('click', function(e) {
-            if(e.target === this) {
-                closeModal();
-            }
-        });
-    </script>
-</body>
-</html>
+      // Switch between tables
+      function switchTable(tableType) {
+          const tableList = document.getElementById('tableList');
+          const tableAttente = document.getElementById('tableAttente');
+          const btnListe = document.getElementById('btnListe');
+          const btnAttente = document.getElementById('btnAttente');
+
+          if (tableType === 'liste') {
+              tableList.classList.remove('hidden');
+              tableAttente.classList.add('hidden');
+              btnListe.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+              btnListe.classList.add('bg-blue-600', 'hover:bg-blue-700');
+              btnAttente.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+              btnAttente.classList.add('bg-gray-400', 'hover:bg-gray-500');
+          } else if (tableType === 'attente') {
+              tableList.classList.add('hidden');
+              tableAttente.classList.remove('hidden');
+              btnAttente.classList.remove('bg-gray-400', 'hover:bg-gray-500');
+              btnAttente.classList.add('bg-blue-600', 'hover:bg-blue-700');
+              btnListe.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+              btnListe.classList.add('bg-gray-400', 'hover:bg-gray-500');
+          }
+      }
+
+      // Search functionality
+      document.addEventListener('DOMContentLoaded', function() {
+          const searchInput = document.getElementById('searchInput');
+          const listeRows = document.querySelectorAll('#listeBody tr');
+          const attenteRows = document.querySelectorAll('#attenteBody tr');
+
+          function filterPatients() {
+              const searchTerm = searchInput.value.toLowerCase();
+
+              listeRows.forEach(row => {
+                  const nameCells = row.querySelectorAll('td:first-child, td:nth-child(2)');
+                  let rowText = '';
+                  nameCells.forEach(cell => {
+                      rowText += ' ' + cell.textContent.toLowerCase();
+                  });
+                  row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+              });
+
+              attenteRows.forEach(row => {
+                  const nameCells = row.querySelectorAll('td:nth-child(2), td:nth-child(3)');
+                  let rowText = '';
+                  nameCells.forEach(cell => {
+                      rowText += ' ' + cell.textContent.toLowerCase();
+                  });
+                  row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+              });
+          }
+
+          searchInput.addEventListener('input', filterPatients);
+          updateQueueStats();
+      });
+
+      // Patient details modal functions
+      function showPatientDetails(event, nom, prenom, naissance, secu, tel, email) {
+          event.preventDefault();
+          document.getElementById('detail-nom').textContent = nom;
+          document.getElementById('detail-prenom').textContent = prenom;
+          document.getElementById('detail-naissance').textContent = naissance;
+          document.getElementById('detail-secu').textContent = secu;
+          document.getElementById('detail-tel').textContent = tel || 'Non renseigné';
+          document.getElementById('detail-email').textContent = email || 'Non renseigné';
+          document.getElementById('patientDetailsModal').classList.remove('hidden');
+      }
+
+      function closePatientDetails() {
+          document.getElementById('patientDetailsModal').classList.add('hidden');
+      }
+
+      document.getElementById('patientDetailsModal').addEventListener('click', function(e) {
+          if(e.target === this) {
+              closePatientDetails();
+          }
+      });
+
+      // Mark patient as consulted
+      function markAsConsulted(button) {
+          const row = button.closest('tr');
+          row.style.opacity = '0.5';
+          button.disabled = true;
+          button.textContent = 'Consultation terminée';
+          button.classList.remove('bg-green-600', 'hover:bg-green-700');
+          button.classList.add('bg-gray-400', 'cursor-not-allowed');
+          updateQueueStats();
+      }
+
+      // Remove patient from queue
+      function removeFromQueue(button) {
+          const row = button.closest('tr');
+          row.style.transition = 'opacity 0.3s ease-out';
+          row.style.opacity = '0';
+          setTimeout(() => {
+              row.remove();
+              updateQueuePositions();
+              updateQueueStats();
+          }, 300);
+      }
+
+      // Update queue positions after removal
+      function updateQueuePositions() {
+          const rows = document.querySelectorAll('#attenteBody tr');
+          rows.forEach((row, index) => {
+              const positionCell = row.querySelector('td:first-child');
+              positionCell.textContent = index + 1;
+          });
+      }
+
+      // Update queue statistics
+      function updateQueueStats() {
+          const rows = document.querySelectorAll('#attenteBody tr');
+          const queueCount = rows.length;
+          document.getElementById('queueCount').textContent = queueCount;
+
+          let totalWaitTime = 0;
+          let maxWaitTime = 0;
+          let urgentCount = 0;
+
+          rows.forEach(row => {
+              const timeCell = row.querySelector('td:nth-child(7)');
+              const priorityCell = row.querySelector('td:nth-child(8)');
+              const timeText = timeCell.textContent.trim();
+              const minutes = parseInt(timeText);
+
+              if (!isNaN(minutes)) {
+                  totalWaitTime += minutes;
+                  if (minutes > maxWaitTime) {
+                      maxWaitTime = minutes;
+                  }
+              }
+
+              if (priorityCell.textContent.includes('Urgent')) {
+                  urgentCount++;
+              }
+          });
+
+          const avgWaitTime = queueCount > 0 ? Math.round(totalWaitTime / queueCount) : 0;
+          document.getElementById('avgWaitTime').textContent = avgWaitTime + ' min';
+          document.getElementById('maxWaitTime').textContent = maxWaitTime + ' min';
+          document.getElementById('urgentCount').textContent = urgentCount;
+      }
+
+      // Auto-update wait times every minute
+      setInterval(function() {
+          const cells = document.querySelectorAll('#attenteBody td:nth-child(7)');
+          cells.forEach(cell => {
+              const timeText = cell.textContent.trim();
+              const minutes = parseInt(timeText);
+              if (!isNaN(minutes)) {
+                  cell.textContent = (minutes + 1) + ' min';
+              }
+          });
+          updateQueueStats();
+      }, 60000);
+  </script>

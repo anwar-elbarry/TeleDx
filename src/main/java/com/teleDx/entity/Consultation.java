@@ -4,6 +4,8 @@ import com.teleDx.entity.Enums.ConsulStatut;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import com.teleDx.entity.Medecin;
+import com.teleDx.entity.Expertise;
 
 @Entity
 @Table(name = "consultation")

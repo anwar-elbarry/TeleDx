@@ -1,4 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<script>
+    const BASE = '${pageContext.request.contextPath}';
+</script>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -677,6 +682,12 @@
             document.getElementById('expertiseModal').classList.add('hidden');
         }
 
+        function logout() {
+            if(confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
+                window.location.href = 'login.jsp';
+            }
+        }
+
         // Expertise Modal Functions
         function loadSpecialists() {
             const specialty = document.getElementById('specialtySelect').value;
@@ -764,3 +775,5 @@
             document.getElementById('totalCost').textContent = total + ' DH';
         }
     </script>
+</body>
+</html>

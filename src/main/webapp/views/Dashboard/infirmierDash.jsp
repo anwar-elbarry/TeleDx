@@ -2,54 +2,9 @@
    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
    <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 bg-blue-100 rounded-full p-3">
-                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Patients en attente</p>
-                        <p class="text-2xl font-bold text-gray-900">8</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 bg-green-100 rounded-full p-3">
-                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Enregistrés aujourd'hui</p>
-                        <p class="text-2xl font-bold text-gray-900">12</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-lg shadow p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 bg-purple-100 rounded-full p-3">
-                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Temps d'attente moyen</p>
-                        <p class="text-2xl font-bold text-gray-900">25 min</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Action Buttons -->
+        <!-- New Patient Creation -->
         <div class="mb-8">
-            <button onclick="showModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-sm transition flex items-center gap-2">
+            <button onclick="showNewPatientModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium shadow-sm transition flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
                 </svg>
@@ -116,7 +71,7 @@
                        </tr>
                    </thead>
 
-                   <tbody class="bg-white divide-y divide-gray-200">
+                   <tbody id="listeBody" class="bg-white divide-y divide-gray-200">
                        <!-- Example Patient Row -->
                       <c:forEach var="patient" items="${patients}" >
                        <tr class="hover:bg-gray-50">
@@ -286,8 +241,10 @@
                                 </span>
                                     </td>
                                     <td class="px-4 py-2 flex gap-2">
-                                        <button class="px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700" onclick="markAsConsulted(this)">Consulté</button>
-                                        <button class="px-3 py-1 bg-red-600 text-white text-xs rounded hover:bg-red-700" onclick="removeFromQueue(this)">Retirer</button>
+                                        <button class="px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700" onclick="openEdit('${patient.id}')">Éditer</button>
+                                        <c:if test="${!patient.enAttenteMedecin}">
+                                            <button class="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700" onclick="addToQueue('${patient.id}')">Ajouter à la file</button>
+                                        </c:if>
                                     </td>
                                 </tr>
                             </c:if>
@@ -298,12 +255,138 @@
             </div>
         </div>
 
-    <!-- Modal for New Patient -->
+    <!-- Modal for Edit Patient -->
     <div id="patientModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
         <div class="relative top-20 mx-auto p-5 border w-full max-w-3xl shadow-lg rounded-md bg-white">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-semibold text-gray-900">Accueil Patient</h3>
+                <h3 class="text-xl font-semibold text-gray-900">Éditer le patient</h3>
                 <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form action="${pageContext.request.contextPath}/dashboard/infirmier/update"  method="POST" class="space-y-6">
+                <input type="hidden" id="id" name="id" />
+                <!-- Personal Information -->
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Informations personnelles</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="nom" class="block text-sm font-medium text-gray-700">Nom</label>
+                            <input type="text" id="nom" name="nom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
+                            <input type="text" id="prenom" name="prenom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                         <div>
+                            <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date de naissance</label>
+                            <input type="date" id="dateNaissance" name="dateNaissance" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="telephone" class="block text-sm font-medium text-gray-700">Téléphone</label>
+                            <input type="tel" id="telephone" name="telephone" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Courriel</label>
+                            <input type="email" id="email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="numSecu" class="block text-sm font-medium text-gray-700">Numéro de sécurité sociale</label>
+                            <input type="text" id="numSecu" name="numSecu" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="adresse" class="block text-sm font-medium text-gray-700">Adresse</label>
+                            <input type="text" id="adresse" name="adresse" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="ville" class="block text-sm font-medium text-gray-700">Ville</label>
+                            <input type="text" id="ville" name="ville" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="codePostal" class="block text-sm font-medium text-gray-700">Code postal</label>
+                            <input type="text" id="codePostal" name="codePostal" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="mutuelle" class="block text-sm font-medium text-gray-700">Mutuelle</label>
+                            <input type="text" id="mutuelle" name="mutuelle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="numMutuelle" class="block text-sm font-medium text-gray-700">Numéro de mutuelle</label>
+                            <input type="text" id="numMutuelle" name="numMutuelle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medical Information -->
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Informations médicales</h2>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label for="antecedents" class="block text-sm font-medium text-gray-700">Antécédents médicaux</label>
+                            <textarea id="antecedents" name="antecedents" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                        </div>
+                        <div>
+                            <label for="allergies" class="block text-sm font-medium text-gray-700">Allergies</label>
+                            <textarea id="allergies" name="allergies" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                        </div>
+                        <div>
+                            <label for="traitements" class="block text-sm font-medium text-gray-700">Traitements en cours</label>
+                            <textarea id="traitements" name="traitements" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                        </div>
+                        <div>
+                            <label for="groupeSanguin" class="block text-sm font-medium text-gray-700">Groupe sanguin</label>
+                            <input type="text" id="groupeSanguin" name="groupeSanguin" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vital Signs -->
+                <div>
+                    <h2 class="text-lg font-semibold mb-4">Signes vitaux</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="poids" class="block text-sm font-medium text-gray-700">Poids (kg)</label>
+                            <input type="number" id="poids" name="poids" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="taille" class="block text-sm font-medium text-gray-700">Taille (cm)</label>
+                            <input type="number" id="taille" name="taille" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="temperature" class="block text-sm font-medium text-gray-700">Température (°C)</label>
+                            <input type="number" id="temperature" name="temperature" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="tension" class="block text-sm font-medium text-gray-700">Tension artérielle</label>
+                            <input type="text" id="tension" name="tension" placeholder="ex. 120/80" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="freqCardiaque" class="block text-sm font-medium text-gray-700">Fréquence cardiaque (bpm)</label>
+                            <input type="number" id="freqCardiaque" name="freqCardiaque" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="freqRespiratoire" class="block text-sm font-medium text-gray-700">Fréquence respiratoire (resp/min)</label>
+                            <input type="number" id="freqRespiratoire" name="freqRespiratoire" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-600">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for New Patient -->
+    <div id="newPatientModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-3xl shadow-lg rounded-md bg-white">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold text-gray-900">Nouvel accueil patient</h3>
+                <button onclick="closeNewPatientModal()" class="text-gray-400 hover:text-gray-600">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -312,123 +395,125 @@
             <form action="${pageContext.request.contextPath}/dashboard/infirmier/save"  method="POST" class="space-y-6">
                 <!-- Personal Information -->
                 <div>
-                    <h2 class="text-lg font-semibold mb-4">Personal Information</h2>
+                    <h2 class="text-lg font-semibold mb-4">Informations personnelles</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="nom" class="block text-sm font-medium text-gray-700">Last Name</label>
-                            <input type="text" id="nom" name="nom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_nom" class="block text-sm font-medium text-gray-700">Nom</label>
+                            <input type="text" id="np_nom" name="nom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="prenom" class="block text-sm font-medium text-gray-700">First Name</label>
-                            <input type="text" id="prenom" name="prenom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_prenom" class="block text-sm font-medium text-gray-700">Prénom</label>
+                            <input type="text" id="np_prenom" name="prenom" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                          <div>
-                            <label for="dateNaissance" class="block text-sm font-medium text-gray-700">Date of Birth</label>
-                            <input type="date" id="dateNaissance" name="dateNaissance" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_dateNaissance" class="block text-sm font-medium text-gray-700">Date de naissance</label>
+                            <input type="date" id="np_dateNaissance" name="dateNaissance" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="telephone" class="block text-sm font-medium text-gray-700">Phone Number</label>
-                            <input type="tel" id="telephone" name="telephone" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_telephone" class="block text-sm font-medium text-gray-700">Téléphone</label>
+                            <input type="tel" id="np_telephone" name="telephone" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" id="email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_email" class="block text-sm font-medium text-gray-700">Courriel</label>
+                            <input type="email" id="np_email" name="email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="numSecu" class="block text-sm font-medium text-gray-700">Social Security Number</label>
-                            <input type="text" id="numSecu" name="numSecu" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_numSecu" class="block text-sm font-medium text-gray-700">Numéro de sécurité sociale</label>
+                            <input type="text" id="np_numSecu" name="numSecu" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="adresse" class="block text-sm font-medium text-gray-700">Address</label>
-                            <input type="text" id="adresse" name="adresse" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_adresse" class="block text-sm font-medium text-gray-700">Adresse</label>
+                            <input type="text" id="np_adresse" name="adresse" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="ville" class="block text-sm font-medium text-gray-700">City</label>
-                            <input type="text" id="ville" name="ville" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_ville" class="block text-sm font-medium text-gray-700">Ville</label>
+                            <input type="text" id="np_ville" name="ville" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="codePostal" class="block text-sm font-medium text-gray-700">Postal Code</label>
-                            <input type="text" id="codePostal" name="codePostal" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_codePostal" class="block text-sm font-medium text-gray-700">Code postal</label>
+                            <input type="text" id="np_codePostal" name="codePostal" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="mutuelle" class="block text-sm font-medium text-gray-700">Insurance Provider</label>
-                            <input type="text" id="mutuelle" name="mutuelle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_mutuelle" class="block text-sm font-medium text-gray-700">Mutuelle</label>
+                            <input type="text" id="np_mutuelle" name="mutuelle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="numMutuelle" class="block text-sm font-medium text-gray-700">Insurance Number</label>
-                            <input type="text" id="numMutuelle" name="numMutuelle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_numMutuelle" class="block text-sm font-medium text-gray-700">Numéro de mutuelle</label>
+                            <input type="text" id="np_numMutuelle" name="numMutuelle" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                 </div>
 
                 <!-- Medical Information -->
                 <div>
-                    <h2 class="text-lg font-semibold mb-4">Medical Information</h2>
+                    <h2 class="text-lg font-semibold mb-4">Informations médicales</h2>
                     <div class="grid grid-cols-1 gap-4">
                         <div>
-                            <label for="antecedents" class="block text-sm font-medium text-gray-700">Medical History</label>
-                            <textarea id="antecedents" name="antecedents" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                            <label for="np_antecedents" class="block text-sm font-medium text-gray-700">Antécédents médicaux</label>
+                            <textarea id="np_antecedents" name="antecedents" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
                         </div>
                         <div>
-                            <label for="allergies" class="block text-sm font-medium text-gray-700">Allergies</label>
-                            <textarea id="allergies" name="allergies" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                            <label for="np_allergies" class="block text-sm font-medium text-gray-700">Allergies</label>
+                            <textarea id="np_allergies" name="allergies" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
                         </div>
                         <div>
-                            <label for="traitements" class="block text-sm font-medium text-gray-700">Current Treatments</label>
-                            <textarea id="traitements" name="traitements" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
+                            <label for="np_traitements" class="block text-sm font-medium text-gray-700">Traitements en cours</label>
+                            <textarea id="np_traitements" name="traitements" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4"></textarea>
                         </div>
                         <div>
-                            <label for="groupeSanguin" class="block text-sm font-medium text-gray-700">Blood Type</label>
-                            <input type="text" id="groupeSanguin" name="groupeSanguin" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_groupeSanguin" class="block text-sm font-medium text-gray-700">Groupe sanguin</label>
+                            <input type="text" id="np_groupeSanguin" name="groupeSanguin" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                 </div>
 
                 <!-- Vital Signs -->
                 <div>
-                    <h2 class="text-lg font-semibold mb-4">Vital Signs</h2>
+                    <h2 class="text-lg font-semibold mb-4">Signes vitaux</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label for="poids" class="block text-sm font-medium text-gray-700">Weight (kg)</label>
-                            <input type="number" id="poids" name="poids" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_poids" class="block text-sm font-medium text-gray-700">Poids (kg)</label>
+                            <input type="number" id="np_poids" name="poids" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="taille" class="block text-sm font-medium text-gray-700">Height (cm)</label>
-                            <input type="number" id="taille" name="taille" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_taille" class="block text-sm font-medium text-gray-700">Taille (cm)</label>
+                            <input type="number" id="np_taille" name="taille" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="temperature" class="block text-sm font-medium text-gray-700">Temperature (°C)</label>
-                            <input type="number" id="temperature" name="temperature" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_temperature" class="block text-sm font-medium text-gray-700">Température (°C)</label>
+                            <input type="number" id="np_temperature" name="temperature" step="0.1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="tension" class="block text-sm font-medium text-gray-700">Blood Pressure</label>
-                            <input type="text" id="tension" name="tension" placeholder="e.g., 120/80" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_tension" class="block text-sm font-medium text-gray-700">Tension artérielle</label>
+                            <input type="text" id="np_tension" name="tension" placeholder="ex. 120/80" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="freqCardiaque" class="block text-sm font-medium text-gray-700">Heart Rate (bpm)</label>
-                            <input type="number" id="freqCardiaque" name="freqCardiaque" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_freqCardiaque" class="block text-sm font-medium text-gray-700">Fréquence cardiaque (bpm)</label>
+                            <input type="number" id="np_freqCardiaque" name="freqCardiaque" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label for="freqRespiratoire" class="block text-sm font-medium text-gray-700">Respiratory Rate (breaths/min)</label>
-                            <input type="number" id="freqRespiratoire" name="freqRespiratoire" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label for="np_freqRespiratoire" class="block text-sm font-medium text-gray-700">Fréquence respiratoire (resp/min)</label>
+                            <input type="number" id="np_freqRespiratoire" name="freqRespiratoire" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="text-center">
-                    <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">Submit</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600">Créer et ajouter à la file</button>
                 </div>
             </form>
         </div>
     </div>
-
 </div>
   <script>
-      function showModal() {
-          document.getElementById('patientModal').classList.remove('hidden');
+      const BASE = '${pageContext.request.contextPath}';
+      function showNewPatientModal() {
+          document.getElementById('newPatientModal').classList.remove('hidden');
       }
-
+      function closeNewPatientModal() {
+          document.getElementById('newPatientModal').classList.add('hidden');
+      }
       function closeModal() {
           document.getElementById('patientModal').classList.add('hidden');
       }
@@ -466,29 +551,86 @@
       // Search functionality
       document.addEventListener('DOMContentLoaded', function() {
           const searchInput = document.getElementById('searchInput');
-          const listeRows = document.querySelectorAll('#listeBody tr');
-          const attenteRows = document.querySelectorAll('#attenteBody tr');
+          const listeBody = document.getElementById('listeBody');
+          const attenteBody = document.getElementById('attenteBody');
 
           function filterPatients() {
-              const searchTerm = searchInput.value.toLowerCase();
+              const term = searchInput.value.trim();
+              fetch(BASE + '/dashboard/infirmier/patients?q=' + encodeURIComponent(term))
+                  .then(r => r.json())
+                  .then(patients => {
+                      // Rebuild liste table
+                      listeBody.innerHTML = '';
+                      patients.forEach(p => {
+                          const tr = document.createElement('tr');
+                          tr.className = 'hover:bg-gray-50';
+                          tr.innerHTML =
+                              '<td class="px-4 py-2"><a href="#" class="text-blue-600 hover:text-blue-800 hover:underline">' + (p.nom||'') + '</a></td>'+
+                              '<td class="px-4 py-2"><a href="#" class="text-blue-600 hover:text-blue-800 hover:underline">' + (p.prenom||'') + '</a></td>'+
+                              '<td class="px-4 py-2">' + (p.date_naissance||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.num_securite_soc||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.telephone||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.email||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.adresse||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.ville||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.codePostal||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.mutuelle||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.numMutuelle||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.antecedents||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.allergies||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.traitementsEnCours||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.poids||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.taille||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.temperature||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.tensionArterielle||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.frequenceCardiaque||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.frequenceRespiratoire||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.groupeSanguin||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.dateArrivee||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.enAttenteMedecin ? '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">En attente</span>' : '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Consulté</span>') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.priorite||'') + '</td>';
+                          // action cell (edit + add-to-queue when not waiting)
+                          const tdActions = document.createElement('td');
+                          tdActions.className = 'px-4 py-2 flex gap-2';
+                          const editBtn = document.createElement('button');
+                          editBtn.className = 'px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700';
+                          editBtn.textContent = 'Éditer';
+                          editBtn.addEventListener('click', () => openEdit(p.id));
+                          tdActions.appendChild(editBtn);
+                          if (!p.enAttenteMedecin) {
+                              const addBtn = document.createElement('button');
+                              addBtn.className = 'px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700';
+                              addBtn.textContent = 'Ajouter à la file';
+                              addBtn.addEventListener('click', () => addToQueue(p.id));
+                              tdActions.appendChild(addBtn);
+                          }
+                          tr.appendChild(tdActions);
+                          listeBody.appendChild(tr);
+                      });
 
-              listeRows.forEach(row => {
-                  const nameCells = row.querySelectorAll('td:first-child, td:nth-child(2)');
-                  let rowText = '';
-                  nameCells.forEach(cell => {
-                      rowText += ' ' + cell.textContent.toLowerCase();
-                  });
-                  row.style.display = rowText.includes(searchTerm) ? '' : 'none';
-              });
+                      // Rebuild attente table (only waiting)
+                      attenteBody.innerHTML = '';
+                      patients.filter(p => p.enAttenteMedecin).forEach((p, idx) => {
+                          const tr = document.createElement('tr');
+                          tr.className = 'hover:bg-gray-50';
+                          tr.innerHTML =
+                              '<td class="px-4 py-2 font-bold text-blue-600">' + (idx+1) + '</td>'+
+                              '<td class="px-4 py-2">' + (p.nom||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.prenom||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.date_naissance||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.telephone||'') + '</td>'+
+                              '<td class="px-4 py-2">' + (p.dateArrivee||'') + '</td>'+
+                              '<td class="px-4 py-2">0 min</td>'+
+                              '<td class="px-4 py-2"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Urgent</span></td>'+
+                              '<td class="px-4 py-2 flex gap-2">' +
+                                '<button class="px-3 py-1 bg-indigo-600 text-white text-xs rounded hover:bg-indigo-700" onclick="openEdit(\'' + p.id + '\')">Éditer</button>'+
+                              '</td>';
+                          attenteBody.appendChild(tr);
+                      });
 
-              attenteRows.forEach(row => {
-                  const nameCells = row.querySelectorAll('td:nth-child(2), td:nth-child(3)');
-                  let rowText = '';
-                  nameCells.forEach(cell => {
-                      rowText += ' ' + cell.textContent.toLowerCase();
-                  });
-                  row.style.display = rowText.includes(searchTerm) ? '' : 'none';
-              });
+                      updateQueueStats();
+                  })
+                  .catch(() => {});
           }
 
           searchInput.addEventListener('input', filterPatients);
@@ -517,27 +659,42 @@
           }
       });
 
-      // Mark patient as consulted
-      function markAsConsulted(button) {
-          const row = button.closest('tr');
-          row.style.opacity = '0.5';
-          button.disabled = true;
-          button.textContent = 'Consultation terminée';
-          button.classList.remove('bg-green-600', 'hover:bg-green-700');
-          button.classList.add('bg-gray-400', 'cursor-not-allowed');
-          updateQueueStats();
+      // Edit-only
+      async function openEdit(id) {
+          try {
+              const r = await fetch(BASE + '/dashboard/infirmier/patient-json?id=' + encodeURIComponent(id));
+              if (!r.ok) { showModalPrefillFallback(); return; }
+              const p = await r.json();
+              document.getElementById('id').value = p.id || '';
+              document.getElementById('nom').value = p.nom || '';
+              document.getElementById('prenom').value = p.prenom || '';
+              document.getElementById('dateNaissance').value = (p.date_naissance || '').toString();
+              document.getElementById('telephone').value = p.telephone || '';
+              document.getElementById('email').value = p.email || '';
+              document.getElementById('numSecu').value = p.num_securite_soc || '';
+              document.getElementById('adresse').value = p.adresse || '';
+              document.getElementById('ville').value = p.ville || '';
+              document.getElementById('codePostal').value = p.codePostal || '';
+              document.getElementById('mutuelle').value = p.mutuelle || '';
+              document.getElementById('numMutuelle').value = p.numMutuelle || '';
+              document.getElementById('antecedents').value = p.antecedents || '';
+              document.getElementById('allergies').value = p.allergies || '';
+              document.getElementById('traitements').value = p.traitementsEnCours || '';
+              document.getElementById('groupeSanguin').value = p.groupeSanguin || '';
+              document.getElementById('poids').value = p.poids ?? '';
+              document.getElementById('taille').value = p.taille ?? '';
+              document.getElementById('temperature').value = p.temperature ?? '';
+              document.getElementById('tension').value = p.tensionArterielle || '';
+              document.getElementById('freqCardiaque').value = p.frequenceCardiaque ?? '';
+              document.getElementById('freqRespiratoire').value = p.frequenceRespiratoire ?? '';
+              document.getElementById('patientModal').classList.remove('hidden');
+          } catch (_) {
+              showModalPrefillFallback();
+          }
       }
 
-      // Remove patient from queue
-      function removeFromQueue(button) {
-          const row = button.closest('tr');
-          row.style.transition = 'opacity 0.3s ease-out';
-          row.style.opacity = '0';
-          setTimeout(() => {
-              row.remove();
-              updateQueuePositions();
-              updateQueueStats();
-          }, 300);
+      function showModalPrefillFallback() {
+          document.getElementById('patientModal').classList.remove('hidden');
       }
 
       // Update queue positions after removal

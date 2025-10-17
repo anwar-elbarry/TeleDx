@@ -12,8 +12,13 @@ public class PatientServiceImpl implements PatientService{
 
     private final PatientDAO patientDAO;
 
-    public PatientServiceImpl(){
-        this.patientDAO = new PatientDAOImpl();
+    public PatientServiceImpl() {
+        this(new PatientDAOImpl());
+    }
+
+    // Package-private constructor for testing
+    PatientServiceImpl(PatientDAO patientDAO) {
+        this.patientDAO = patientDAO;
     }
 
     @Override

@@ -1,42 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>specialiste Dashboard - TeleDx</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Tableau de Bord specialiste</title>
-</head>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord Médecin Spécialiste</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <h1 class="text-xl font-bold text-purple-600">Système Télé-Expertise</h1>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-700">Dr. <strong>Laila Bennani</strong> - Dermatologue</span>
-                    <button onclick="showProfileModal()" class="text-purple-600 hover:text-purple-700 px-4 py-2 rounded-lg text-sm font-medium border border-purple-600 hover:bg-purple-50 transition">
-                        Mon Profil
-                    </button>
-                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                        Déconnexion
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Stats Cards -->
@@ -729,11 +691,6 @@
             document.getElementById('respondModal').classList.add('hidden');
         }
 
-        function logout() {
-            if(confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
-                window.location.href = 'login.jsp';
-            }
-        }
 
         function filterExpertises() {
             alert('Filtrage des expertises appliqué');
@@ -777,5 +734,3 @@
             }
         });
     </script>
-</body>
-</html>

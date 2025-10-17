@@ -1,31 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
-<head>
-    <title>Generalist Dashboard - TeleDx</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord Generaliste</title>
-</head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <h1 class="text-xl font-bold text-blue-600">Système Télé-Expertise</h1>
-                    </div>
-                </div>
-                <div class="flex items-center gap-4">
-                    <span class="text-sm text-gray-700">Dr. <strong>Hassan Tazi</strong> - Généraliste</span>
-                    <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
-                        Déconnexion
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -704,12 +677,6 @@
             document.getElementById('expertiseModal').classList.add('hidden');
         }
 
-        function logout() {
-            if(confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
-                window.location.href = 'login.jsp';
-            }
-        }
-
         // Expertise Modal Functions
         function loadSpecialists() {
             const specialty = document.getElementById('specialtySelect').value;
@@ -797,5 +764,3 @@
             document.getElementById('totalCost').textContent = total + ' DH';
         }
     </script>
-</body>
-</html>
